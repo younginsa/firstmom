@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firstmom — Warm redesign</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<style>
+  /* ============== Warm palette — Pi × ABY × Meta AI ============== */
+  :root {
+    --cream:           #F8F1E4;   /* page surface */
+    --cream-soft:      #FDF8EE;   /* card surface */
+    --cream-warmer:    #F0E6D2;   /* slight depth */
+    --ink:             #2B2418;   /* primary text — deep warm brown */
+    --ink-soft:        #5C5141;   /* secondary text */
+    --ink-faint:       #948672;   /* tertiary text */
+    --line:            rgba(43, 36, 24, 0.08);
+    --coral:           #D97757;   /* warm accent (action) */
+    --coral-soft:      #F5D9C9;
+    --sage:            #6B8E6B;   /* calm accent */
+    --sage-soft:       #D8E4D2;
+    --peach:           #F2C9A0;
+    --gold:            #E0B454;
+    --gradient-aby:    linear-gradient(135deg, #FFE2C5 0%, #F8E5D3 35%, #E7DBE9 70%, #C7DBEA 100%);
+    --gradient-mom:    linear-gradient(135deg, #F8D5C2 0%, #F4C9B8 60%, #D8AC9A 100%);
+
+    --font-serif: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-sans:  "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 32px 0 64px 0;
+    background: #ECE0CB;
+    font-family: var(--font-sans);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .page-header {
+    max-width: 1200px;
+    margin: 0 auto 32px auto;
+    padding: 0 32px;
+  }
+  .page-header h1 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 36px;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .page-header p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 720px;
+  }
+  .page-header .accent {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--coral-soft);
+    color: var(--coral);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ============== Horizontal device flow ============== */
+  .flow {
+    display: flex;
+    gap: 28px;
+    overflow-x: auto;
+    padding: 24px 32px 40px 32px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .device-wrap {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  .device {
+    width: 340px;
+    background: #1F1A12;
+    border-radius: 48px;
+    padding: 11px;
+    box-shadow:
+      0 24px 48px rgba(43, 36, 24, 0.18),
+      0 8px 16px rgba(43, 36, 24, 0.08);
+  }
+  .screen {
+    background: var(--cream);
+    border-radius: 38px;
+    height: 720px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    color: var(--ink);
+  }
+  .status-bar {
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 28px 6px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+  .home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 5px;
+    background: rgba(43, 36, 24, 0.35);
+    border-radius: 3px;
+  }
+  .body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+  }
+  .body::-webkit-scrollbar { display: none; }
+
+  .device-label {
+    text-align: center;
+    margin-top: 16px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .device-label small {
+    display: block;
+    color: var(--ink-soft);
+    font-weight: 400;
+    margin-top: 4px;
+    font-size: 11px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ============== Typography ============== */
+  .serif { font-family: var(--font-serif); }
+  .sans  { font-family: var(--font-sans); }
+  .display { font-family: var(--font-serif); font-size: 24px; line-height: 1.18; font-weight: 500; letter-spacing: -0.01em; }
+  .headline { font-family: var(--font-serif); font-size: 24px; line-height: 1.25; font-weight: 500; letter-spacing: -0.005em; }
+  .title { font-family: var(--font-serif); font-size: 19px; line-height: 1.3; font-weight: 500; }
+  .body-serif { font-family: var(--font-serif); font-size: 16px; line-height: 1.55; font-weight: 400; }
+  .body-sans { font-family: var(--font-sans); font-size: 14px; line-height: 1.55; }
+  .small-sans { font-family: var(--font-sans); font-size: 12px; line-height: 1.5; color: var(--ink-soft); }
+  .overline {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ============== Reusable components ============== */
+  .pill-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 52px;
+    padding: 0 28px;
+    background: var(--ink);
+    color: var(--cream-soft);
+    border-radius: 26px;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  .pill-btn.coral { background: var(--coral); color: white; }
+  .pill-btn.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background: rgba(43, 36, 24, 0.06);
+    color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ============== Meta-AI-style bottom nav + always-on input ============== */
+  .input-rail {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 88px;
+    background: var(--cream-soft);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 6px 6px 6px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(43, 36, 24, 0.05);
+  }
+  .input-rail .placeholder {
+    flex: 1;
+    color: var(--ink-faint);
+    font-family: var(--font-sans);
+    font-size: 14px;
+  }
+  .input-rail .send {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    background: var(--coral);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .input-rail .mic {
+    width: 36px; height: 36px;
+    border-radius: 18px;
+    color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .nav {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 80px;
+    background: rgba(248, 241, 228, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 8px 32px 22px 32px;
+    z-index: 5;
+  }
+  .nav-item {
+    width: 56px;
+    height: 32px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-faint);
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-item svg {
+    width: 22px;
+    height: 22px;
+  }
+  .nav-item.active {
+    background: var(--coral-soft);
+    color: var(--coral);
+  }
+
+  /* ============== Screen 1: Splash (ABY pattern) ============== */
+  .splash {
+    height: 100%;
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .splash-bg {
+    position: absolute;
+    inset: 0;
+    filter: blur(28px);
+    opacity: 0.7;
+    transform: scale(1.15);
+  }
+  .blur-tile {
+    position: absolute;
+    border-radius: 24px;
+  }
+  .splash-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 32px;
+    text-align: left;
+    z-index: 2;
+  }
+  .brand-mark {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--coral);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-mark svg { width: 30px; height: 30px; }
+  .splash .wordmark {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .splash .tagline {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    line-height: 1.35;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .splash-cta {
+    position: absolute;
+    left: 32px;
+    right: 32px;
+    bottom: 56px;
+    z-index: 3;
+  }
+  .splash-cta .legal {
+    margin-top: 16px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+  .splash-cta .legal a { color: var(--ink-soft); text-decoration: underline; }
+
+  /* ============== Screen 2: Onboarding child ============== */
+  .onb {
+    padding: 24px 28px 0 28px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .onb-progress {
+    height: 4px;
+    background: var(--cream-warmer);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 8px 0 32px 0;
+  }
+  .onb-progress .fill {
+    height: 100%;
+    width: 33%;
+    background: var(--coral);
+    border-radius: 2px;
+  }
+  .onb-question {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .onb-helper {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 28px;
+  }
+  .onb-field {
+    background: var(--cream-soft);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .onb-field .label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
+  }
+  .onb-field .value {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .onb-field .value.placeholder { color: var(--ink-faint); }
+  .onb-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .onb-chip {
+    padding: 8px 14px;
+    border-radius: 18px;
+    background: var(--cream-soft);
+    border: 1px solid var(--line);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .onb-chip.selected {
+    background: var(--ink);
+    color: var(--cream-soft);
+    border-color: var(--ink);
+  }
+  .onb-chip.add-chip {
+    background: transparent;
+    border-style: dashed;
+    border-color: var(--ink-faint);
+    color: var(--ink-soft);
+  }
+  .onb-chip.add-chip svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* ============== Screen 3: Home (Pi suggestion grid) ============== */
+  .home-header {
+    padding: 24px 16px 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .home-header .greet-block { flex: 1; min-width: 0; }
+  .settings-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background: transparent;
+    border: none;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .settings-btn svg { width: 22px; height: 22px; }
+  .home-greeting {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .home-greeting em {
+    font-style: italic;
+    color: var(--coral);
+    font-weight: 500;
+  }
+  .home-meta {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  .section-title {
+    padding: 28px 24px 12px 24px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title .see-all {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
+    color: var(--ink-soft);
+    font-size: 12px;
+  }
+
+  .intent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 24px;
+  }
+  .intent-card {
+    background: var(--cream-soft);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .intent-cover {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    position: relative;
+  }
+  .intent-card .label {
+    padding: 12px 14px 14px 14px;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    line-height: 1.3;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .cover-a { background: #F2C9A0; }   /* peach */
+  .cover-b { background: #C8DEC1; }   /* sage */
+  .cover-c { background: #F5D9C9; }   /* coral soft */
+  .cover-d { background: #DCC8E0; }   /* mauve */
+  .cover-e { background: #ECC9A8; }   /* warm tan */
+  .cover-f { background: #CDDCE5; }   /* sky */
+
+  /* ============== Screen 4: Daily detail ============== */
+  .daily-top {
+    padding: 16px 20px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .daily-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--coral-soft);
+    color: var(--coral);
+    border-radius: 12px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin: 16px 24px 12px 24px;
+  }
+  .daily-heading {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    line-height: 1.2;
+    font-weight: 500;
+    color: var(--ink);
+    padding: 0 24px;
+    margin-bottom: 20px;
+    letter-spacing: -0.005em;
+  }
+  .daily-media {
+    margin: 0 24px 16px 24px;
+    height: 180px;
+    border-radius: 20px;
+    background: var(--coral);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 48px;
+    position: relative;
+  }
+  .daily-media .meta {
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .daily-byline {
+    padding: 0 24px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+  .daily-frame {
+    margin: 0 24px;
+    padding: 18px 20px;
+    background: var(--cream-soft);
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .daily-frame b { font-weight: 600; }
+  .daily-actions {
+    padding: 0 24px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .daily-actions .pill-btn { flex: 1; height: 48px; font-size: 14px; }
+
+  /* ============== Screen 5: Chat (Pi-style) ============== */
+  .chat-header {
+    height: 56px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .chat-header .title {
+    flex: 1;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    text-align: center;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 22px 16px 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-divider {
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin: 16px 0 20px 0;
+    position: relative;
+  }
+  .chat-divider::before,
+  .chat-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: var(--line);
+  }
+  .chat-divider::before { left: 0; }
+  .chat-divider::after { right: 0; }
+  .ai-message {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 10px;
+    align-self: flex-start;
+    max-width: 100%;
+  }
+  .ai-message + .ai-message { margin-top: -4px; }
+  .ai-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-self: flex-start;
+    color: var(--ink-faint);
+    font-size: 15px;
+  }
+  .user-message {
+    background: var(--cream-warmer);
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-family: var(--font-serif);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 80%;
+    align-self: flex-end;
+    margin-bottom: 22px;
+  }
+
+  /* ============== Screen 6: Noticed card (ABY pattern) ============== */
+  .noticed-screen {
+    height: 100%;
+    position: relative;
+    background: var(--cream);
+  }
+  .noticed-dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(43, 36, 24, 0.18);
+    backdrop-filter: blur(2px);
+    z-index: 1;
+  }
+  .noticed-card {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 32px;
+    background: #F4D9C0;
+    border-radius: 28px;
+    padding: 24px 22px;
+    box-shadow: 0 24px 48px rgba(43, 36, 24, 0.15);
+    z-index: 2;
+  }
+  .noticed-card .label {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .noticed-card .title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    line-height: 1.3;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .noticed-card .body-text {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .noticed-card .actions {
+    display: flex;
+    gap: 8px;
+  }
+  .noticed-card .pill-mini {
+    padding: 8px 14px;
+    background: rgba(43, 36, 24, 0.08);
+    border-radius: 14px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .noticed-card .pill-mini.primary {
+    background: var(--ink);
+    color: var(--cream-soft);
+  }
+  .noticed-card .close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    background: rgba(43, 36, 24, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .noticed-bg-preview {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    padding: 16px 24px;
+    overflow: hidden;
+  }
+  .noticed-bg-preview .home-greeting { opacity: 0.4; }
+  .noticed-bg-preview .intent-card { opacity: 0.35; }
+
+  /* ============== Screen 7: Me / Profile ============== */
+  .me-top {
+    padding: 16px 24px 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .me-top .title {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    color: var(--ink);
+  }
+  .me-hero {
+    padding: 8px 24px 24px 24px;
+    text-align: center;
+  }
+  .me-avatar {
+    width: 84px;
+    height: 84px;
+    margin: 16px auto 12px auto;
+    border-radius: 50%;
+    background: var(--coral-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+  }
+  .me-name {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .me-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  .me-group {
+    margin: 12px 16px;
+    background: var(--cream-soft);
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .me-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .me-row + .me-row { border-top: 1px solid var(--line); }
+  .me-row .leading {
+    width: 36px; height: 36px;
+    border-radius: 12px;
+    background: var(--cream-warmer);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .me-row .content { flex: 1; }
+  .me-row .head {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .me-row .desc {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .me-row .trailing {
+    color: var(--ink-faint);
+    font-size: 14px;
+  }
+
+  /* ============== Bookmark page ============== */
+  .bookmark-top {
+    padding: 16px 24px 0 24px;
+  }
+  .bookmark-top h1 {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 12px 0 0 0;
+    letter-spacing: -0.005em;
+  }
+  .bookmark-count {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .bookmark-chips {
+    display: flex;
+    gap: 8px;
+    padding: 24px 24px 20px 24px;
+    overflow-x: auto;
+  }
+  .bookmark-chips::-webkit-scrollbar { display: none; }
+  .bookmark-chips .b-chip {
+    padding: 7px 14px;
+    border-radius: 16px;
+    background: var(--cream-soft);
+    border: 1px solid var(--line);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .bookmark-chips .b-chip.selected {
+    background: var(--ink);
+    color: var(--cream-soft);
+    border-color: var(--ink);
+  }
+  .bookmark-list {
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .bookmark-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    cursor: pointer;
+  }
+  .bookmark-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .bookmark-thumb.video { background: var(--coral); }
+  .bookmark-thumb.tip { background: var(--sage); color: white; }
+  .bookmark-thumb.book { background: var(--gold); color: var(--ink); }
+  .bookmark-thumb.quote { background: #DCC8E0; color: var(--ink); font-family: var(--font-serif); font-size: 30px; line-height: 1; padding-top: 12px; }
+  .bookmark-content {
+    flex: 1;
+    min-width: 0;
+    padding-top: 2px;
+  }
+  .bookmark-headline {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .bookmark-meta {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  /* ============== Settings page ============== */
+  .settings-header {
+    padding: 16px 16px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .settings-header .title {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .settings-header .spacer { width: 40px; }
+
+  /* ============== Design system reference panel ============== */
+  .design-ref {
+    max-width: 1100px;
+    margin: 48px auto 0 auto;
+    background: var(--cream-soft);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(43, 36, 24, 0.06);
+  }
+  .design-ref h2 {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+  }
+  .design-ref .sub {
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .design-ref .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .design-ref .col-title {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 12px;
+  }
+  .swatch-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .swatch { text-align: center; }
+  .swatch .chip {
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    margin-bottom: 6px;
+  }
+  .swatch .name { font-size: 10px; color: var(--ink-soft); }
+
+  .principle-list { margin: 0; padding-left: 18px; }
+  .principle-list li {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .principle-list b { font-weight: 600; }
+
+  .ref-row {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .ref-row > div { flex: 1; }
+
+  .credit-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--cream-warmer);
+    color: var(--ink-soft);
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-right: 6px;
+  }
+  .credit-tag.pi { background: #E5EBD8; color: #4D6B3D; }
+  .credit-tag.meta { background: #D8E4F2; color: #2A5599; }
+  .credit-tag.aby { background: #F0E4F2; color: #7A4D8C; }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="accent">Firstmom · warm redesign</div>
+  <h1>처음이라 서툴지만, 천천히 같이해나가요</h1>
+  <p>
+    Pi의 따뜻한 톤과 세리프 활자, ABY Journal의 회고 카드, Meta AI의 하단 입력바 패턴을 가져와
+    Material 3 mockup을 다시 디자인했어요. 가로로 스크롤하며 비교해보세요.
+  </p>
+</header>
+
+<div class="flow">
+
+  <!-- ============== 1. SPLASH (ABY pattern) ============== -->
+  <div class="device-wrap">
+    <div class="device"><div class="screen">
+      <div class="status-bar"><span>9:41</span><span>● ● ●</span></div>
+
+      <div class="splash" style="flex:1">
+        <!-- Blurred app preview tiles in background -->
+        <div class="splash-bg">
+          <div class="blur-tile" style="top:-20px; left:-30px; width:160px; height:200px; background:linear-gradient(135deg,#F8D5C2,#F2A57A);"></div>
+          <div class="blur-tile" style="top:80px; right:-40px; width:180px; height:160px; background:linear-gradient(135deg,#D8E4D2,#A8C0A4);"></div>
+          <div class="blur-tile" style="bottom:80px; left:-30px; width:200px; height:180px; background:linear-gradient(135deg,#E7DBE9,#C9B6CC);"></div>
+          <div class="blur-tile" style="bottom:-40px; right:-20px; width:200px; height:200px; background:linear-gradient(135deg,#FFE2BD,#F2C9A0);"></div>
+        </div>
+
+        <div class="splash-content">
+          <div class="brand-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s-7-4.5-7-10a4.5 4.5 0 0 1 7-3.5A4.5 4.5 0 0 1 19 11c0 5.5-7 10-7 10z"/>
+            </svg>
+          </div>
+          <div class="wordmark">FIRSTMOM</div>
+          <div class="tagline">처음이라 서툰 마음, 곁에서 같이 읽어줄게요</div>
+        </div>
+
+        <div class="splash-cta">
+          <button class="pill-btn">시작하기</button>
+          <div class="legal">
+            계속하면 <a href="#">이용약관</a>과 <a href="#">개인정보 처리방침</a>에 동의합니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div></div>
+    <div class="device-label">1. Splash
+      <small><span class="credit-tag aby">ABY</span>blurred app behind, soft 3D mark, single CTA</small>
+    </div>
+  </div>
+
+  <!-- ============== 2. ONBOARDING ============== -->
+  <div class="device-wrap">
+    <div class="device"><div class="screen">
+      <div class="status-bar"><span>9:41</span><span>● ● ●</span></div>
+
+      <div class="body">
+        <div class="onb">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px">
+            <div class="icon-btn" style="background:transparent; font-size:20px">←</div>
+            <div class="onb-progress" style="flex:1; margin:0">
+              <div class="fill"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:32px"></div>
+
+          <div class="onb-question">아이에 대해<br>조금만 알려주세요</div>
+
+          <div class="onb-field">
+            <div class="label">아이 이름</div>
+            <div class="value">지우</div>
+          </div>
+
+          <div class="onb-field">
+            <div class="label">생일</div>
+            <div class="value">2024년 4월 12일</div>
+          </div>
+
+          <div style="margin-top:8px"></div>
+
+          <div class="overline" style="margin-bottom:12px">요즘 가장 마음 쓰이는 것</div>
+          <div class="onb-chips">
+            <div class="onb-chip selected">잠투정 ✓</div>
+            <div class="onb-chip selected">어린이집 적응 ✓</div>
+            <div class="onb-chip">먹는 양</div>
+            <div class="onb-chip">언어 발달</div>
+            <div class="onb-chip">자기주장</div>
+            <div class="onb-chip">놀이</div>
+            <div class="onb-chip add-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              Add
+            </div>
+          </div>
+
+          <div style="flex:1"></div>
+          <div style="padding-bottom:28px">
+            <button class="pill-btn coral">다음</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div></div>
+    <div class="device-label">2. Onboarding
+      <small>warm serif questions · chip selections feel like conversation</small>
+    </div>
+  </div>
+
+  <!-- ============== 3. HOME (Pi suggestion grid) ============== -->
+  <div class="device-wrap">
+    <div class="device"><div class="screen">
+      <div class="status-bar"><span>9:41</span><span>● ● ●</span></div>
+
+      <div class="body" style="padding-bottom:100px">
+        <div class="home-header">
+          <div class="greet-block">
+            <div class="home-greeting">지우 2살 1개월</div>
+          </div>
+          <button class="settings-btn" title="설정">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="section-title">
+          <span>오늘의 한 메시지</span>
+        </div>
+        <div style="margin:0 24px; padding:18px 20px; background:var(--coral-soft); border-radius:20px; color:var(--ink)">
+          <div class="overline" style="color:var(--ink-soft); margin-bottom:8px">오늘 · 영상 3분</div>
+          <div style="font-family:var(--font-serif); font-size:20px; line-height:1.3; font-weight:500; margin-bottom:12px">
+            "싫어!"가 늘었다면 —<br>좋은 신호예요
+          </div>
+          <div style="font-family:var(--font-serif); font-size:14px; line-height:1.5; color:var(--ink); opacity:0.8; margin-bottom:14px">
+            두 돌 무렵의 자기주장은 발달의 핵심이에요.
+          </div>
+          <div style="display:inline-block; padding:8px 16px; background:var(--ink); color:var(--cream-soft); border-radius:14px; font-family:var(--font-sans); font-size:13px; font-weight:500">
+            ▶  보기 (3:24)
+          </div>
+        </div>
+
+        <div class="section-title">
+          <span>지금 떠오르는 마음으로</span>
+          <span class="see-all">전체 →</span>
+        </div>
+
+        <div class="intent-grid">
+          <div class="intent-card">
+            <div class="intent-cover cover-a">🌧</div>
+            <div class="label">그냥 들어주세요</div>
+          </div>
+          <div class="intent-card">
+            <div class="intent-cover cover-b">🌿</div>
+            <div class="label">아이 발달이 궁금해요</div>
+          </div>
+          <div class="intent-card">
+            <div class="intent-cover cover-c">🌙</div>
+            <div class="label">잠투정, 같이 풀어봐요</div>
+          </div>
+          <div class="intent-card">
+            <div class="intent-cover cover-d">📖</div>
+            <div class="label">읽을 책 추천</div>
+          </div>
+          <div class="intent-card">
+            <div class="intent-cover cover-e">☕</div>
+            <div class="label">엄마 자신을 챙기는 시간</div>
+          </div>
+          <div class="intent-card">
+            <div class="intent-cover cover-f">💭</div>
+            <div class="label">남편과 이야기할 거리</div>
+          </div>
+        </div>
+
+        <div style="height:24px"></div>
+      </div>
+
+      <!-- Bottom nav: home · chat · bookmark (pill under active) -->
+      <div class="nav">
+        <div class="nav-item active" title="홈">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>
+        </div>
+        <div class="nav-item" title="채팅">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V13M15 11V13M8 18L4 22V8C4 7.46957 4.21071 6.96086 4.58579 6.58579C4.96086 6.21071 5.46957 6 6 6H18C18.5304 6 19.0391 6.21071 19.4142 6.58579C19.7893 6.96086 20 7.46957 20 8V16C20 16.5304 19.7893 17.0391 19.4142 17.4142C19.0391 17.7893 18.5304 18 18 18H8Z"/></svg>
+        </div>
+        <div class="nav-item" title="북마크">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div></div>
+    <div class="device-label">3. Home
+      <small><span class="credit-tag pi">Pi</span>intent grid · 오늘 한 메시지 카드 · 설정 진입점 top-right</small>
+    </div>
+  </div>
+
+  <!-- ============== 4. DAILY DETAIL ============== -->
+  <div class="device-wrap">
+    <div class="device"><div class="screen">
+      <div class="status-bar"><span>9:41</span><span>● ● ●</span></div>
+
+      <div class="body">
+        <div class="daily-top">
+          <div class="icon-btn" style="background:transparent" title="뒤로">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </div>
+          <div style="flex:1"></div>
+          <button class="icon-btn" style="background:transparent; color:var(--ink-soft)" title="공유">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+          </button>
+          <button class="icon-btn" style="background:transparent; color:var(--ink-soft)" title="저장">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+          </button>
+        </div>
+
+        <div class="daily-tag">5월 20일 · 영상</div>
+        <h1 class="daily-heading">"싫어!"가 늘었다면 —<br>좋은 신호예요</h1>
+
+        <div class="daily-media">
+          ▶
+          <div class="meta">3:24</div>
+        </div>
+        <div class="daily-byline">닥터지니 · 검증된 소아과 채널</div>
+
+        <div class="daily-frame">
+          어제 어린이집 거부 이야기를 들으면서 떠올린 영상이에요.
+          이 시기 자기주장은 <b>건강한 자아 형성</b>의 시작이라는 점,
+          꼭 한 번 같이 들으면 좋겠어요.
+        </div>
+
+        <div class="daily-actions">
+          <button class="pill-btn coral" style="margin:0">💬 이것 관련 대화</button>
+          <button class="pill-btn ghost" style="margin:0; max-width:90px">메모</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div></div>
+    <div class="device-label">4. Daily detail
+      <small>serif headline · framing card explains why this video, today</small>
+    </div>
+  </div>
+
+  <!-- ============== 5. CHAT (Pi-style) ============== -->
+  <div class="device-wrap">
+    <div class="device"><div class="screen">
+      <div class="status-bar"><span>9:41</span><span>● ● ●</span></div>
+
+      <div class="chat-header">
+        <div class="icon-btn" style="background:transparent">←</div>
+        <div class="title">Firstmom</div>
+        <div class="icon-btn" style="background:transparent">⋯</div>
+      </div>
+
+      <div class="chat-body">
+        <div class="chat-divider">오늘 오전 8:42</div>
+
+        <div class="user-message">
+          지우가 어린이집 가기 싫다고 매일 울어요.
+          아침마다 전쟁이에요…
+        </div>
+
+        <div class="ai-message">
+          매일 아침 그러면 정말 진이 다 빠지죠. 엄마 마음도 무거우실 거예요. 🤍
+        </div>
+        <div class="ai-message">
+          하나만 여쭤봐도 될까요? 어린이집에 도착한 다음에는 어떤가요?
+        </div>
+        <div class="ai-actions">
+          <span>📋</span> <span>🔊</span>
+        </div>
+
+        <div class="user-message">
+          들어가면 잘 논다고 하더라구요
+        </div>
+
+        <div class="ai-message">
+          아 다행이에요. 그럼 분리불안 단계에 가까워 보여요.
+          이 시기 아이들에게 흔하고, 보통 <i>2~3주</i>면 가라앉는답니다.
+        </div>
+        <div class="ai-message">
+          작은 의식 하나 같이 만들어볼래요? 헤어질 때 매일 똑같이 반복하면
+          예측 가능해져서 아이도 안심해요.
+        </div>
+        <div class="ai-actions">
+          <span>📋</span> <span>🔊</span>
+        </div>
+      </div>
+
+      <!-- Pi-style input: single pill with brand mark, no nav -->
+      <div style="padding:8px 12px 18px 12px">
+        <div style="display:flex; align-items:center; gap:8px; background:var(--cream-soft); border:1px solid var(--line); border-radius:28px; padding:6px 6px 6px 20px">
+          <div style="flex:1; font-family:var(--font-serif); font-style:italic; color:var(--ink-faint); font-size:15px">메시지 보내기…</div>
+          <div style="width:36px; height:36px; border-radius:18px; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:16px">🎙</div>
+          <div style="width:42px; height:42px; border-radius:21px; background:var(--coral); color:white; display:flex; align-items:center; justify-content:center; font-size:18px">↑</div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div></div>
+    <div class="device-label">5. Chat
+      <small><span class="credit-tag pi">Pi</span>no AI bubble — just serif text on cream</small>
+    </div>
+  </div>
+
+  <!-- ============== 6. NOTICED (ABY pattern) ============== -->
+  <div class="device-wrap">
+    <div class="device"><div class="screen">
+      <div class="status-bar"><span>9:41</span><span>● ● ●</span></div>
+
+      <div class="noticed-screen">
+        <!-- Background preview of home, dimmed -->
+        <div class="noticed-bg-preview">
+          <div style="padding:16px 0 8px 0">
+            <div class="home-greeting">지우 2살 1개월</div>
+          </div>
+          <div class="intent-grid" style="padding:0; margin-top:160px">
+            <div class="intent-card"><div class="intent-cover cover-a">🌧</div><div class="label">그냥 들어주세요</div></div>
+            <div class="intent-card"><div class="intent-cover cover-b">🌿</div><div class="label">아이 발달</div></div>
+          </div>
+        </div>
+
+        <div class="noticed-dim"></div>
+
+        <div class="noticed-card">
+          <div class="close">✕</div>
+          <div class="label">Firstmom이 발견했어요…</div>
+          <div class="title">
+            이번 주, 잠투정 이야기가<br>세 번 있었어요
+          </div>
+          <div class="body-text">
+            5월 16일, 19일, 그리고 오늘. 흥미로운 건, 어린이집에 다녀온 날마다
+            잠들기가 더 힘들었다는 거예요. <b>새 환경에 적응하는 아이의 신체가
+            보내는 신호</b>일 수 있어요.
+          </div>
+          <div class="actions">
+            <div class="pill-mini primary">같이 이야기하기</div>
+            <div class="pill-mini">나중에 보기</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div></div>
+    <div class="device-label">6. Firstmom Noticed…
+      <small><span class="credit-tag aby">ABY</span>weekly reflection card with cross-day pattern</small>
+    </div>
+  </div>
+
+  <!-- ============== 7. BOOKMARK ============== -->
+  <div class="device-wrap">
+    <div class="device"><div class="screen">
+      <div class="status-bar"><span>9:41</span><span>● ● ●</span></div>
+
+      <div class="body" style="padding-bottom:100px">
+        <div class="bookmark-top">
+          <h1>북마크</h1>
+        </div>
+
+        <div class="bookmark-chips">
+          <div class="b-chip selected">전체 (8)</div>
+          <div class="b-chip">영상</div>
+          <div class="b-chip">팁</div>
+          <div class="b-chip">책</div>
+          <div class="b-chip">명언</div>
+        </div>
+
+        <div class="bookmark-list">
+          <div class="bookmark-row">
+            <div class="bookmark-thumb video">▶</div>
+            <div class="bookmark-content">
+              <div class="bookmark-headline">"싫어!"가 늘었다면 — 좋은 신호예요</div>
+              <div class="bookmark-meta">영상 · 3분 · 5월 20일 저장</div>
+            </div>
+          </div>
+
+          <div class="bookmark-row">
+            <div class="bookmark-thumb tip">💡</div>
+            <div class="bookmark-content">
+              <div class="bookmark-headline">잠투정 줄이는 저녁 의식 다섯 가지</div>
+              <div class="bookmark-meta">실천 팁 · 2분 읽기 · 5월 18일 저장</div>
+            </div>
+          </div>
+
+          <div class="bookmark-row">
+            <div class="bookmark-thumb book">📚</div>
+            <div class="bookmark-content">
+              <div class="bookmark-headline">「엄마 반성문」 — 이유남</div>
+              <div class="bookmark-meta">책 추천 · 5월 15일 저장</div>
+            </div>
+          </div>
+
+          <div class="bookmark-row">
+            <div class="bookmark-thumb quote">"</div>
+            <div class="bookmark-content">
+              <div class="bookmark-headline">"오늘은 충분히 잘했어요"라고 스스로에게 말해주기</div>
+              <div class="bookmark-meta">엄마를 위한 한 줄 · 5월 12일 저장</div>
+            </div>
+          </div>
+
+          <div class="bookmark-row">
+            <div class="bookmark-thumb video">▶</div>
+            <div class="bookmark-content">
+              <div class="bookmark-headline">두 돌 언어 폭발기 — 부모가 도울 수 있는 것</div>
+              <div class="bookmark-meta">영상 · 5분 30초 · 5월 8일 저장</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <div class="nav-item" title="홈">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>
+        </div>
+        <div class="nav-item" title="채팅">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V13M15 11V13M8 18L4 22V8C4 7.46957 4.21071 6.96086 4.58579 6.58579C4.96086 6.21071 5.46957 6 6 6H18C18.5304 6 19.0391 6.21071 19.4142 6.58579C19.7893 6.96086 20 7.46957 20 8V16C20 16.5304 19.7893 17.0391 19.4142 17.4142C19.0391 17.7893 18.5304 18 18 18H8Z"/></svg>
+        </div>
+        <div class="nav-item active" title="북마크">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div></div>
+    <div class="device-label">7. Bookmark (저장한 메시지)
+      <small>filter chips · color-coded thumbs by content type · sorted by save date</small>
+    </div>
+  </div>
+
+  <!-- ============== 8. SETTINGS ============== -->
+  <div class="device-wrap">
+    <div class="device"><div class="screen">
+      <div class="status-bar"><span>9:41</span><span>● ● ●</span></div>
+
+      <div class="body" style="padding-bottom:40px">
+        <div class="settings-header">
+          <button class="icon-btn" style="background:transparent" title="뒤로">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="title">설정</div>
+          <div class="spacer"></div>
+        </div>
+
+        <div class="me-hero">
+          <div class="me-avatar">👶</div>
+          <div class="me-name">지우</div>
+          <div class="me-sub">2살 1개월 · 함께한 지 32일</div>
+        </div>
+
+        <div class="me-group">
+          <div class="me-row">
+            <div class="leading">👶</div>
+            <div class="content">
+              <div class="head">아이 정보</div>
+              <div class="desc">이름 · 생일 · 관심사</div>
+            </div>
+            <div class="trailing">›</div>
+          </div>
+          <div class="me-row">
+            <div class="leading">🤍</div>
+            <div class="content">
+              <div class="head">엄마 자신</div>
+              <div class="desc">요즘 컨디션 · 받고 싶은 응원</div>
+            </div>
+            <div class="trailing">›</div>
+          </div>
+        </div>
+
+        <div class="me-group">
+          <div class="me-row">
+            <div class="leading">🔔</div>
+            <div class="content">
+              <div class="head">매일 받는 시간</div>
+              <div class="desc">오전 8:00</div>
+            </div>
+            <div class="trailing">›</div>
+          </div>
+          <div class="me-row">
+            <div class="leading">📖</div>
+            <div class="content">
+              <div class="head">대화 기록</div>
+              <div class="desc">12개 대화 · 내보내기 가능</div>
+            </div>
+            <div class="trailing">›</div>
+          </div>
+          <div class="me-row">
+            <div class="leading">🔒</div>
+            <div class="content">
+              <div class="head">개인정보 · 안전</div>
+            </div>
+            <div class="trailing">›</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div></div>
+    <div class="device-label">8. Settings (설정)
+      <small>opened from Home top-right gear · no bottom nav (it's a sub-page, not a tab)</small>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============== Design system reference ============== -->
+<div class="design-ref">
+  <h2>Design tokens & references</h2>
+  <div class="sub">이 mockup은 다음 세 앱의 패턴을 조합했어요. 각 결정의 출처를 정리해두었어요.</div>
+
+  <div class="grid">
+    <div>
+      <div class="col-title">Color — warm cream system</div>
+      <div class="swatch-row">
+        <div class="swatch"><div class="chip" style="background:#F8F1E4"></div><div class="name">cream</div></div>
+        <div class="swatch"><div class="chip" style="background:#FDF8EE"></div><div class="name">cream soft</div></div>
+        <div class="swatch"><div class="chip" style="background:#F0E6D2"></div><div class="name">cream warmer</div></div>
+        <div class="swatch"><div class="chip" style="background:#2B2418"></div><div class="name">ink</div></div>
+        <div class="swatch"><div class="chip" style="background:#D97757"></div><div class="name">coral</div></div>
+        <div class="swatch"><div class="chip" style="background:#F5D9C9"></div><div class="name">coral soft</div></div>
+        <div class="swatch"><div class="chip" style="background:#6B8E6B"></div><div class="name">sage</div></div>
+        <div class="swatch"><div class="chip" style="background:#E0B454"></div><div class="name">gold</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="col-title">Typography — Pretendard, weight as voice</div>
+      <div style="font-family:var(--font-serif); font-size:24px; line-height:1.2; font-weight:600; color:var(--ink); margin-bottom:6px; letter-spacing:-0.015em">
+        지우 2살 1개월
+      </div>
+      <div style="font-family:var(--font-serif); font-size:22px; line-height:1.3; font-weight:600; color:var(--ink); margin-bottom:6px; letter-spacing:-0.01em">
+        Pretendard 22/600 — Headline
+      </div>
+      <div style="font-family:var(--font-serif); font-size:16px; line-height:1.55; font-weight:400; color:var(--ink); margin-bottom:6px">
+        Pretendard 16/400 — Body. 채팅과 카드 본문. 가독성과 따뜻함을 같이.
+      </div>
+      <div style="font-family:var(--font-sans); font-size:13px; font-weight:500; color:var(--ink-soft); margin-bottom:6px">
+        Pretendard 13/500 — UI Label · 버튼 · 메타데이터
+      </div>
+      <div class="overline">PRETENDARD 11/600 UPPERCASE — SECTION LABEL</div>
+    </div>
+  </div>
+
+  <div class="ref-row">
+    <div>
+      <div class="col-title">What changed vs M3 mockup</div>
+      <ul class="principle-list">
+        <li><b>Cream instead of lavender surface</b> — warmer, less clinical, signals "home"</li>
+        <li><b>Pretendard 전체 적용</b> — 무게(weight)로 위계 표현. 헤딩 500–600, body 400, label 500</li>
+        <li><b>플랫 컬러로 통일</b> — gradient는 splash 1장만, 나머지 카드/커버는 단색 soft tone</li>
+        <li><b>AI 메시지에 bubble 없음</b> — just text on cream (Pi pattern)</li>
+        <li><b>Home is intent-first</b> — 6-card mood grid instead of a category chip row</li>
+        <li><b>3-tab pill nav</b> — 홈 · 채팅 · 북마크. Active 상태는 coral-soft pill 배경</li>
+        <li><b>설정은 nav 밖으로</b> — Home top-right gear가 진입점. 아이/엄마 정보, 알림, 데이터, 안전 모두 여기에 모음</li>
+        <li><b>Weekly "Noticed…" card</b> — cross-day pattern surfaced as ambient insight (ABY)</li>
+        <li><b>"엄마 자신" row</b> in 설정 — user's own wellbeing is first-class, not buried</li>
+      </ul>
+    </div>
+    <div>
+      <div class="col-title">Pattern credits</div>
+      <ul class="principle-list">
+        <li><span class="credit-tag pi">Pi</span> 따뜻한 톤·AI bubble 없는 chat·intent grid 홈</li>
+        <li><span class="credit-tag meta">Meta AI</span> 항상 떠있는 입력바·라벨 없는 미니멀 nav·brand orb tab</li>
+        <li><span class="credit-tag aby">ABY Journal</span> blurred-app splash·single CTA·"Noticed…" 카드 패턴</li>
+      </ul>
+
+      <div class="col-title" style="margin-top:20px">Korean copy guidelines</div>
+      <ul class="principle-list">
+        <li>존댓말 + 따뜻한 1인칭. "~해요" 톤. 명령형 ("~하세요") 금지.</li>
+        <li>아이 이름을 자주 부르기 — "지우는…", "지우 엄마는…"</li>
+        <li>한 메시지에 emoji 하나만, 의미 있을 때만 (🤍, 🌿)</li>
+        <li>질문은 항상 짧게, 한 번에 하나만</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

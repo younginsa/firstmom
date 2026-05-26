@@ -1,0 +1,67 @@
+<h2>Firstmom — System Architecture</h2>
+<p class="subtitle">High-level view of what we're building. Read along with the terminal walkthrough.</p>
+
+<style>
+  .arch { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .col { background: #fff; border-radius: 14px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .col h3 { margin-top: 0; color: #5b6cff; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .tile { background: #f6f7fb; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 13px; }
+  .tile strong { display:block; color:#1a1a2e; font-size:13px; margin-bottom:2px; }
+  .tile span { color:#666; font-size:12px; }
+  .arrow { text-align: center; color: #5b6cff; font-size: 24px; margin: 4px 0; }
+  .flow { background: #fff; border-radius: 14px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-top: 16px; }
+  .flow h3 { margin-top: 0; }
+  .flow ol { margin: 0; padding-left: 20px; }
+  .flow li { margin-bottom: 6px; font-size: 13px; color: #333; }
+</style>
+
+<div class="arch">
+  <div class="col">
+    <h3>📱 Mobile (Expo)</h3>
+    <div class="tile"><strong>Chat screen</strong><span>Streaming AI replies, Warm Friend voice</span></div>
+    <div class="tile"><strong>Today screen</strong><span>Daily message card + history</span></div>
+    <div class="tile"><strong>Child profile</strong><span>Lightweight onboarding, stage auto-derived</span></div>
+    <div class="tile"><strong>Settings</strong><span>Push time, language, notification prefs</span></div>
+  </div>
+
+  <div class="col">
+    <h3>⚙️ Backend (Next.js on Vercel)</h3>
+    <div class="tile"><strong>/api/chat</strong><span>Streaming chat via AI SDK + AI Gateway</span></div>
+    <div class="tile"><strong>/api/daily/generate</strong><span>Cron-driven per-user daily generation</span></div>
+    <div class="tile"><strong>/api/content</strong><span>Curated content library + search</span></div>
+    <div class="tile"><strong>/api/push</strong><span>Expo Push delivery</span></div>
+    <div class="tile"><strong>Vercel Cron + Queues</strong><span>Schedules + batches daily generation</span></div>
+  </div>
+
+  <div class="col">
+    <h3>🧠 AI + Data</h3>
+    <div class="tile"><strong>AI Gateway</strong><span>Provider-agnostic LLM access</span></div>
+    <div class="tile"><strong>Postgres (Neon via Marketplace)</strong><span>Users, children, threads, messages, daily logs</span></div>
+    <div class="tile"><strong>Conversation memory</strong><span>Rolling summary + recent N turns</span></div>
+    <div class="tile"><strong>Content library</strong><span>Curated, tagged by stage / topic / language</span></div>
+    <div class="tile"><strong>Vercel Blob</strong><span>User-uploaded images (future)</span></div>
+  </div>
+</div>
+
+<div class="flow">
+  <h3>🌅 Daily message generation flow (runs hourly via Cron)</h3>
+  <ol>
+    <li>Cron fires every hour → finds users whose <em>local</em> preferred delivery time matches</li>
+    <li>For each user: fetch child stage + recent chat summary + last 7 daily topics</li>
+    <li>LLM picks: format (tip / video / quote / book / news) + topic (related to chat or seasonal)</li>
+    <li>LLM queries content library with constraints → picks 1 verified link</li>
+    <li>LLM writes warm personalized framing around the link</li>
+    <li>Persist daily_message row → send Expo push → tapping opens Today screen</li>
+  </ol>
+</div>
+
+<div class="flow">
+  <h3>💬 Chat flow (real-time, streaming)</h3>
+  <ol>
+    <li>User sends message → /api/chat receives userId + threadId + text</li>
+    <li>Backend assembles: system prompt (Warm Friend + stage context) + memory summary + recent turns + new message</li>
+    <li>AI SDK streams response from AI Gateway (Claude Haiku default for cost; escalate to Sonnet for hard topics)</li>
+    <li>Safety filter checks for medical/mental health/abuse signals → appends professional-resource pointer</li>
+    <li>After thread crosses N turns, async job updates the rolling memory summary</li>
+  </ol>
+</div>

@@ -1,0 +1,280 @@
+<h2>System flow — daily message + chat in motion</h2>
+<p class="subtitle">Read left → right. Phone = what the user sees. Cards = what the system does in between.</p>
+
+<style>
+  .flow-track {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 20px 8px 28px 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .phone-mini {
+    flex: 0 0 auto;
+    width: 200px;
+    background: #1a1a2e;
+    border-radius: 26px;
+    padding: 6px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.16);
+    position: relative;
+  }
+  .phone-mini .screen {
+    background: #FFF8F3;
+    border-radius: 20px;
+    height: 380px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-mini .notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 16px;
+    background: #1a1a2e;
+    border-radius: 12px;
+    z-index: 10;
+  }
+  .phone-mini .status { height: 32px; flex-shrink: 0; }
+  .phone-mini .body { padding: 10px 12px; flex:1; overflow:hidden; }
+  .phone-mini .label-below {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1a1a2e;
+  }
+
+  .sys-card {
+    flex: 0 0 auto;
+    width: 240px;
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    border: 2px dashed #5B47E5;
+    box-shadow: 0 2px 8px rgba(91,71,229,0.08);
+  }
+  .sys-card h4 { margin: 0 0 8px 0; font-size: 11px; color: #5B47E5; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+  .sys-card ol { margin: 0; padding-left: 16px; font-size: 11px; color: #333; line-height: 1.5; }
+  .sys-card ol li { margin-bottom: 4px; }
+  .sys-card .stack { font-size: 9px; color: #888; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0ece6; }
+
+  .arrow {
+    flex: 0 0 auto;
+    color: #5B47E5;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .flow-title {
+    background: linear-gradient(135deg, #5B47E5 0%, #7C6BFF 100%);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: inline-block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+
+  /* mini screen content */
+  .mini-pill { display:inline-block; background:#E8E4FD; color:#5B47E5; padding:3px 8px; border-radius:10px; font-size:8px; font-weight:600; }
+  .mini-h { font-size: 12px; font-weight: 700; color: #1a1a2e; margin: 6px 0 4px 0; line-height:1.3; }
+  .mini-sub { font-size: 9px; color: #888; margin: 0 0 8px 0; }
+  .mini-hero { background: linear-gradient(135deg, #FFE4D6 0%, #FFD1C7 100%); border-radius: 14px; padding: 10px; }
+  .mini-bubble-ai { background: white; padding: 7px 9px; border-radius: 12px 12px 12px 4px; font-size: 9px; color: #1a1a2e; line-height: 1.4; margin-bottom: 5px; box-shadow:0 1px 2px rgba(0,0,0,0.04); }
+  .mini-bubble-user { background: #5B47E5; color: white; padding: 7px 9px; border-radius: 12px 12px 4px 12px; font-size: 9px; line-height: 1.4; margin-bottom: 5px; margin-left: 18px; }
+  .mini-notif { background: rgba(255,255,255,0.92); border-radius: 12px; padding: 10px; margin: 10px 6px; backdrop-filter: blur(10px); }
+  .mini-notif .app-name { font-size: 9px; color: #888; font-weight: 600; }
+  .mini-notif .title { font-size: 10px; font-weight: 700; color: #1a1a2e; margin: 2px 0; }
+  .mini-notif .body { font-size: 9px; color: #555; padding: 0; }
+  .lockscreen { background: linear-gradient(180deg, #6B5BD9 0%, #4A3FB8 100%); flex:1; padding: 10px 0; }
+  .clock { color:white; text-align:center; font-size: 32px; font-weight: 200; margin-top: 30px; }
+  .clock-date { color: rgba(255,255,255,0.75); text-align:center; font-size: 10px; }
+</style>
+
+<div class="flow-title">🌅 Flow A — Daily message delivery</div>
+
+<div class="flow-track">
+
+  <!-- Step 1: System generates -->
+  <div class="sys-card">
+    <h4>① Generation (overnight prep)</h4>
+    <ol>
+      <li>Cron fires hourly → matches users whose local push-time == "now"</li>
+      <li>Load child stage + chat summary + last-7-days topics</li>
+      <li>LLM picks <b>kind</b> (video/tip/quote/book)</li>
+      <li>Vector search content_items (locale + stage + topic)</li>
+      <li>LLM writes 2-3 sentence personal framing</li>
+      <li>Insert daily_messages row</li>
+    </ol>
+    <div class="stack">Vercel Cron · Queues · AI Gateway · Postgres+pgvector</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- Step 2: Push delivered -->
+  <div class="sys-card" style="border-color:#FF8C5A">
+    <h4 style="color:#FF8C5A">② Push delivery</h4>
+    <ol>
+      <li>Worker calls Expo Push API with token + title + body</li>
+      <li>Expo fans out → APNs (iOS) + FCM (Android)</li>
+      <li>Notification surfaces on lock screen</li>
+    </ol>
+    <div class="stack">Expo Push Service · APNs · FCM</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- Phone 1: Lock screen with push -->
+  <div>
+    <div class="phone-mini">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="status"></div>
+        <div class="lockscreen">
+          <div class="clock">8:00</div>
+          <div class="clock-date">화 · 5월 20일</div>
+          <div class="mini-notif">
+            <div class="app-name">FIRSTMOM</div>
+            <div class="title">오늘의 메시지 ☀️</div>
+            <div class="body">"싫어!"가 늘었다면 — 좋은 신호예요. 3분 영상 한 번 보실래요?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="label-below">Phone: lock screen<small style="display:block;color:#888;font-weight:400">User taps the notification</small></div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- Phone 2: Daily detail opens -->
+  <div>
+    <div class="phone-mini">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="status"></div>
+        <div class="body">
+          <div style="font-size:11px; color:#5B47E5; margin-bottom:4px">←</div>
+          <span class="mini-pill">5월 20일 · 영상</span>
+          <div class="mini-h">"싫어!"가 늘었다면 — 좋은 신호예요</div>
+          <div style="background:linear-gradient(135deg,#ff5252,#c41818); height:60px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; margin-bottom:6px">▶</div>
+          <p style="font-size:9px; color:#888; margin:0 0 8px 0">닥터지니 · 3:24</p>
+          <p style="font-size:9px; color:#333; line-height:1.5; margin:0">어제 어린이집 거부 이야기 들으면서 생각했어요. 이 시기 자기주장은 건강한 자아 형성의 시작이에요.</p>
+        </div>
+      </div>
+    </div>
+    <div class="label-below">Phone: Daily detail<small style="display:block;color:#888;font-weight:400">Verified link + warm framing</small></div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- Step 3: Tracking -->
+  <div class="sys-card">
+    <h4>③ Open tracked</h4>
+    <ol>
+      <li>App fires /api/daily/opened</li>
+      <li>daily_messages.opened_at set</li>
+      <li>Signal feeds future kind preference</li>
+    </ol>
+    <div class="stack">Next.js API · Postgres</div>
+  </div>
+
+</div>
+
+<div class="flow-title" style="background: linear-gradient(135deg, #FF8C5A 0%, #FFB088 100%); margin-top: 24px">💬 Flow B — Chat conversation</div>
+
+<div class="flow-track">
+
+  <!-- Phone 1: User types -->
+  <div>
+    <div class="phone-mini">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="status"></div>
+        <div class="body">
+          <div class="mini-bubble-user">지우가 어린이집 가기 싫다고 울어요</div>
+          <div style="background:#F3F0EB; border-radius:14px; padding:6px 10px; font-size:9px; color:#888; margin-top:auto">메시지 보내기…  ↑</div>
+        </div>
+      </div>
+    </div>
+    <div class="label-below">Phone: user sends<small style="display:block;color:#888;font-weight:400">Tap send</small></div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- Step: Context assembly -->
+  <div class="sys-card">
+    <h4>① Context assembly</h4>
+    <ol>
+      <li>/api/chat receives userId, threadId, text</li>
+      <li>Fetch chat_summaries.summary_text</li>
+      <li>Fetch last 20 chat_messages</li>
+      <li>Fetch child stage + interests</li>
+      <li>Build prompt: [system: Warm Friend + stage] + [summary] + [recent 20] + [new]</li>
+    </ol>
+    <div class="stack">Next.js API · Postgres</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- Step: AI Gateway + safety -->
+  <div class="sys-card" style="border-color:#FF8C5A">
+    <h4 style="color:#FF8C5A">② Safety + AI</h4>
+    <ol>
+      <li>Pre-flight safety check (keywords + classifier)</li>
+      <li>Pick model: Haiku default, Sonnet if safety-flagged</li>
+      <li>Stream from AI Gateway via AI SDK</li>
+      <li>Append resource pointer if safety-flagged</li>
+    </ol>
+    <div class="stack">AI Gateway · Claude · AI SDK v6</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- Phone 2: Streaming reply -->
+  <div>
+    <div class="phone-mini">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="status"></div>
+        <div class="body">
+          <div class="mini-bubble-user">지우가 어린이집 가기 싫다고 울어요</div>
+          <div class="mini-bubble-ai">아 매일 아침 그러면 정말 진이 다 빠지죠… 엄마 마음도 무거우실 거예요.</div>
+          <div class="mini-bubble-ai">먼저 하나만 여쭤봐도 될까요? 어린이집 도착 후에는 어떠세요?<span style="opacity:0.4">▮</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="label-below">Phone: streaming reply<small style="display:block;color:#888;font-weight:400">Bubble grows token-by-token</small></div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- Step: Persist + memory -->
+  <div class="sys-card">
+    <h4>③ Persist + memory</h4>
+    <ol>
+      <li>Insert assistant message into chat_messages</li>
+      <li>Track token usage</li>
+      <li>If thread has +10 new msgs since last summary → enqueue summary job</li>
+      <li>Worker writes updated chat_summaries.summary_text</li>
+    </ol>
+    <div class="stack">Postgres · Vercel Queues · AI Gateway</div>
+  </div>
+
+</div>
+
+<div style="background:white; border-radius:14px; padding:18px; margin-top:8px; box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+  <h3 style="margin-top:0; font-size:15px">Key takeaways</h3>
+  <ul style="margin:0; padding-left:18px; font-size:13px; color:#333; line-height:1.7">
+    <li><b>Daily message is async</b> — generated in the background, not when the user opens the app. Push is the trigger.</li>
+    <li><b>Chat is real-time streaming</b> — user sees tokens appear as they're generated. No "thinking…" spinner.</li>
+    <li><b>Memory is incremental</b> — rolling summary keeps context bounded even after 1000s of messages. No re-reading full history.</li>
+    <li><b>Safety is layered, not blocking</b> — model escalation + resource pointer, but the AI always engages warmly. Never "I can't help with that."</li>
+    <li><b>Open/save signals improve relevance</b> — every tap teaches the daily-message generator what this parent values.</li>
+  </ul>
+</div>

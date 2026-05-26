@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Firstmom",
+    "slug": "firstmom",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "firstmom",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.firstmom.app"
+    },
+    "android": {
+      "package": "com.firstmom.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#F8F1E4"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "splash": {
+      "backgroundColor": "#F8F1E4",
+      "resizeMode": "contain"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

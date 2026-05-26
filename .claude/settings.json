@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(superpowers:brainstorming)",
+      "Skill(superpowers:brainstorming:*)",
+      "Read(//Users/younginsa/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/skills/brainstorming/**)",
+      "mcp__mobbin__search_screens"
+    ]
+  }
+}

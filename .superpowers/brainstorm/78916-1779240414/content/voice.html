@@ -1,0 +1,59 @@
+<h2>What voice does the AI coach have?</h2>
+<p class="subtitle">Same parent question, three personalities. Click the one that feels right (or describe your own).</p>
+
+<style>
+  .chat-card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:12px; min-height: 320px; }
+  .bubble-user { align-self: flex-end; background: #5b6cff; color: white; padding: 12px 16px; border-radius: 18px 18px 4px 18px; max-width: 85%; font-size: 14px; }
+  .bubble-ai { align-self: flex-start; background: #f0f2f7; color: #1a1a2e; padding: 12px 16px; border-radius: 18px 18px 18px 4px; max-width: 90%; font-size: 14px; line-height: 1.5; }
+  .voice-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #888; font-weight: 600; margin-bottom: 4px; }
+  .voice-name { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+</style>
+
+<div class="cards" style="grid-template-columns: repeat(3, 1fr)">
+  <div class="card" data-choice="warm-friend" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="chat-card">
+        <div class="voice-label">Option A</div>
+        <div class="voice-name">Warm Friend 🤗</div>
+        <div class="bubble-user">My 2yo won't sleep, I'm losing it</div>
+        <div class="bubble-ai">Oof, I'm so sorry — those nights are brutal. You're not alone in this. Want to walk through what's been happening at bedtime lately? Sometimes one small tweak makes a huge difference.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Warm Friend</h3>
+      <p>Empathetic, validates feelings first, conversational. Like texting a parent friend who's been there.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="expert-coach" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="chat-card">
+        <div class="voice-label">Option B</div>
+        <div class="voice-name">Calm Expert 🧠</div>
+        <div class="bubble-user">My 2yo won't sleep, I'm losing it</div>
+        <div class="bubble-ai">Toddler sleep regressions are common between 18–30 months. Three things often help: (1) a 4-step wind-down routine, (2) a consistent 7–7:30pm bedtime, (3) reducing screen time after 5pm. Which would you like to try first?</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Calm Expert</h3>
+      <p>Evidence-based, structured, actionable. Like a pediatrician who's good at explaining things.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="playful-cheerleader" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="chat-card">
+        <div class="voice-label">Option C</div>
+        <div class="voice-name">Playful Cheerleader ✨</div>
+        <div class="bubble-user">My 2yo won't sleep, I'm losing it</div>
+        <div class="bubble-ai">First — you're doing amazing. Toddler sleep is the boss-level of parenting 🎮 Tell me about tonight's bedtime and we'll co-author a tiny experiment for tomorrow. Spoiler: it works better when it's small.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Playful Cheerleader</h3>
+      <p>Light, encouraging, gamified. Treats parenting as a fun shared adventure.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="text-align:center;margin-top:24px">Or maybe a blend? Tell me in the terminal.</p>

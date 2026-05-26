@@ -1,0 +1,12 @@
+node_modules
+.turbo
+.next
+.expo
+dist
+build
+web-build
+ios
+android
+pnpm-lock.yaml
+BUILD_PLAN.md
+mockup-warm.html
