@@ -63,12 +63,12 @@ What Claude in VS Code will build:
 **Goal:** First-launch flow matching mockup screens 1 + 2. Child stage auto-derives from birthdate. Data persists locally.
 
 What gets built:
-1. Splash screen (warm gradient, logo, 1.5s timeout → onboarding if no child saved)
-2. Onboarding screen: name input, birthdate picker, gender selector
+1. Splash screen (warm gradient, logo, **tap-driven CTA "시작하기"** → onboarding if no child saved, else → home)
+2. Onboarding screen: name input, birthdate picker, **~~gender selector~~ removed v1 — mockup-warm.html is the source of truth; gender wasn't in the design and stage derivation only needs birthdate. Can revisit in v1.2 if content needs it.**, concern chips ("요즘 가장 마음 쓰이는 것")
 3. Stage derivation: `infant` (0–12mo), `baby` (12–24mo), `toddler` (24–48mo), `preschool` (48mo+)
 4. Stage badge: "💛 지우는 현재 유아기예요" (also EN version)
-5. AsyncStorage persistence: `{ childId, childName, birthdate, gender, stage }`
-6. i18n: language switcher in dev (we'll move it to Settings later)
+5. AsyncStorage persistence: `{ childId, childName, birthdate, stage, concerns }`
+6. i18n: Korean default, English strings ready in `i18n/en.json` but not user-toggleable yet (Settings doesn't exist in M1)
 
 **Pause and test:**
 - Fresh install → splash → onboarding

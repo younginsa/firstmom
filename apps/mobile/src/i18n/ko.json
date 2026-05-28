@@ -1,0 +1,44 @@
+{
+  "splash": {
+    "wordmark": "FIRSTMOM",
+    "taglineLine1": "처음이라 서툴지만,",
+    "taglineLine2": "천천히 같이 해나가요.",
+    "cta": "시작하기",
+    "legalPrefix": "계속하면 ",
+    "legalTerms": "이용약관",
+    "legalAnd": "과 ",
+    "legalPrivacy": "개인정보 처리방침",
+    "legalSuffix": "에 동의합니다."
+  },
+  "onboarding": {
+    "questionLine1": "아이에 대해",
+    "questionLine2": "알려주세요",
+    "nameLabel": "아이 이름",
+    "namePlaceholder": "예: 지우",
+    "birthdayLabel": "생일",
+    "birthdayPlaceholder": "선택해주세요",
+    "concernsOverline": "요즘 가장 마음 쓰이는 것",
+    "concerns": {
+      "sleep": "잠투정",
+      "daycare": "어린이집 적응",
+      "eating": "먹는 양",
+      "language": "언어 발달",
+      "assertiveness": "자기주장",
+      "play": "놀이"
+    },
+    "addChip": "Add",
+    "next": "다음",
+    "back": "뒤로"
+  },
+  "home": {
+    "stageBadge": "💛 {{name}}는 현재 {{stage}}예요",
+    "title": "홈",
+    "devLangToggle": "한 <-> 영 (개발용)"
+  },
+  "stage": {
+    "infant": "신생아기",
+    "baby": "영아기",
+    "toddler": "유아기",
+    "preschool": "미취학기"
+  }
+}

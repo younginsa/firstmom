@@ -1,0 +1,44 @@
+{
+  "splash": {
+    "wordmark": "FIRSTMOM",
+    "taglineLine1": "First-time parenting is hard —",
+    "taglineLine2": "we'll walk it together.",
+    "cta": "Get started",
+    "legalPrefix": "By continuing, you agree to our ",
+    "legalTerms": "Terms",
+    "legalAnd": " and ",
+    "legalPrivacy": "Privacy Policy",
+    "legalSuffix": "."
+  },
+  "onboarding": {
+    "questionLine1": "Tell us about",
+    "questionLine2": "your child",
+    "nameLabel": "Child's name",
+    "namePlaceholder": "e.g., Jiwoo",
+    "birthdayLabel": "Birthday",
+    "birthdayPlaceholder": "Choose a date",
+    "concernsOverline": "What's on your mind lately",
+    "concerns": {
+      "sleep": "Sleep",
+      "daycare": "Daycare drop-off",
+      "eating": "Eating",
+      "language": "Language",
+      "assertiveness": "Big feelings",
+      "play": "Play"
+    },
+    "addChip": "Add",
+    "next": "Next",
+    "back": "Back"
+  },
+  "home": {
+    "stageBadge": "💛 {{name}} is in {{stage}} right now",
+    "title": "Home",
+    "devLangToggle": "KO <-> EN (dev)"
+  },
+  "stage": {
+    "infant": "infancy",
+    "baby": "babyhood",
+    "toddler": "toddlerhood",
+    "preschool": "preschool age"
+  }
+}
