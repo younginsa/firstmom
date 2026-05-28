@@ -7,11 +7,13 @@ import { useTranslation } from 'react-i18next';
 import {
   type ChildProfile,
   clearChildProfile,
+  clearThread,
   loadChildProfile,
   saveLanguage,
-} from '../src/lib/storage';
-import { englishAgeLabel, koreanAgeLabel } from '../src/lib/stage';
-import { palette, type } from '../src/theme/tokens';
+} from '../../src/lib/storage';
+import { englishAgeLabel, koreanAgeLabel } from '../../src/lib/stage';
+import { resetMockReplyCycle } from '../../src/lib/mockReplies';
+import { palette, type } from '../../src/theme/tokens';
 
 /**
  * M1 placeholder Home. Header is `{childName} {age}` (matching mockup
@@ -32,6 +34,8 @@ export default function Home() {
 
   async function handleReset() {
     await clearChildProfile();
+    await clearThread();
+    resetMockReplyCycle();
     router.replace('/');
   }
 
